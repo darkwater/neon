@@ -108,11 +108,12 @@ macro_rules! register_module {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! class_definition {
-    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; $mnames:tt ; $mdefs:tt ; init($cx:pat) $body:block $($rest:tt)* ) => {
+    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; $mnames:tt ; $mdefs:tt ; $(#[$attr:meta])* init($cx:pat) $body:block $($rest:tt)* ) => {
         class_definition!($cls ;
                           $cname ;
                           $typ ;
                           {
+                              $(#[$attr])*
                               fn _______allocator_rust_y_u_no_hygienic_items_______($cx: $crate::context::CallContext<$crate::types::JsUndefined>) -> $crate::result::NeonResult<$typ> {
                                   $body
                               }
@@ -126,7 +127,7 @@ macro_rules! class_definition {
                           $($rest)*);
     };
 
-    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; ($($mname:tt)*) ; ($($mdef:tt)*) ; method $name:ident($cx:pat) $body:block $($rest:tt)* ) => {
+    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; ($($mname:tt)*) ; ($($mdef:tt)*) ; $(#[$attr:meta])* method $name:ident($cx:pat) $body:block $($rest:tt)* ) => {
         class_definition!($cls ;
                           $cname ;
                           $typ ;
@@ -135,6 +136,7 @@ macro_rules! class_definition {
                           $new_ctor ;
                           ($($mname)* $name) ;
                           ($($mdef)* {
+                              $(#[$attr])*
                               fn _______method_rust_y_u_no_hygienic_items_______($cx: $crate::context::CallContext<$cls>) -> $crate::result::JsResult<$crate::types::JsValue> {
                                   $body
                               }
@@ -144,13 +146,14 @@ macro_rules! class_definition {
                           $($rest)*);
     };
 
-    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; $mnames:tt ; $mdefs:tt ; constructor($cx:pat) $body:block $($rest:tt)* ) => {
+    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; $mnames:tt ; $mdefs:tt ; $(#[$attr:meta])* constructor($cx:pat) $body:block $($rest:tt)* ) => {
         class_definition!($cls ;
                           $cname ;
                           $typ ;
                           $allocator ;
                           $call_ctor ;
                           ({
+                              $(#[$attr])*
                               fn _______constructor_rust_y_u_no_hygienic_items_______($cx: $crate::context::CallContext<$cls>) -> $crate::result::NeonResult<Option<$crate::handle::Handle<$crate::types::JsObject>>> {
                                   $body
                               }
@@ -162,12 +165,13 @@ macro_rules! class_definition {
                           $($rest)*);
     };
 
-    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; $mnames:tt ; $mdefs:tt ; call($cx:pat) $body:block $($rest:tt)* ) => {
+    ( $cls:ident ; $cname:ident ; $typ:ty ; $allocator:tt ; $call_ctor:tt ; $new_ctor:tt ; $mnames:tt ; $mdefs:tt ; $(#[$attr:meta])* call($cx:pat) $body:block $($rest:tt)* ) => {
         class_definition!($cls ;
                           $cname ;
                           $typ ;
                           $allocator ;
                           ({
+                              $(#[$attr])*
                               fn _______call_rust_y_u_no_hygienic_items_______($cx: $crate::context::CallContext<$crate::types::JsValue>) -> $crate::result::JsResult<$crate::types::JsValue> {
                                   $body
                               }
